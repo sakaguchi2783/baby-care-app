@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { Link } from 'react-router-dom';
-import './PageStyles.css'; // 共通スタイルを追加
+import './PageStyles.css';
 
 const DiaperRecord = () => {
   const [date, setDate] = useState('');
@@ -16,17 +16,23 @@ const DiaperRecord = () => {
     const { data, error } = await supabase
       .from('diaper_records')
       .select('*');
-    if (error) console.error('Error fetching data:', error);
-    else setRecords(data);
+    if (error) {
+      console.error('Error fetching data:', error);
+    } else {
+      setRecords(data);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('diaper_records')
       .insert([{ date, time, color, quantity, condition }]);
-    if (error) console.error('Error inserting data:', error);
-    else fetchData();
+    if (error) {
+      console.error('Error inserting data:', error);
+    } else {
+      fetchData();
+    }
   };
 
   useEffect(() => {

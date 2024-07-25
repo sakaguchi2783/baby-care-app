@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { Link } from 'react-router-dom';
-import './PageStyles.css'; // 共通スタイルを追加
+import './PageStyles.css';
 
 const PoopAnalysis = () => {
   const [date, setDate] = useState('');
@@ -15,17 +15,23 @@ const PoopAnalysis = () => {
     const { data, error } = await supabase
       .from('poop_analysis')
       .select('*');
-    if (error) console.error('Error fetching data:', error);
-    else setRecords(data);
+    if (error) {
+      console.error('Error fetching data:', error);
+    } else {
+      setRecords(data);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('poop_analysis')
       .insert([{ date, color, consistency, notes }]);
-    if (error) console.error('Error inserting data:', error);
-    else fetchData();
+    if (error) {
+      console.error('Error inserting data:', error);
+    } else {
+      fetchData();
+    }
   };
 
   useEffect(() => {

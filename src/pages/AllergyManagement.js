@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { Link } from 'react-router-dom';
-import './PageStyles.css'; // 共通スタイルを追加
+import './PageStyles.css';
 
 const AllergyManagement = () => {
   const [allergen, setAllergen] = useState('');
@@ -14,17 +14,23 @@ const AllergyManagement = () => {
     const { data, error } = await supabase
       .from('allergy_management')
       .select('*');
-    if (error) console.error('Error fetching data:', error);
-    else setRecords(data);
+    if (error) {
+      console.error('Error fetching data:', error);
+    } else {
+      setRecords(data);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('allergy_management')
       .insert([{ allergen, reaction, date_discovered: dateDiscovered }]);
-    if (error) console.error('Error inserting data:', error);
-    else fetchData();
+    if (error) {
+      console.error('Error inserting data:', error);
+    } else {
+      fetchData();
+    }
   };
 
   useEffect(() => {

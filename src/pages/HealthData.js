@@ -1,7 +1,9 @@
 // src/pages/HealthData.js
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
+import { Link } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import './PageStyles.css';
 
 const HealthData = () => {
   const [healthData, setHealthData] = useState([]);
@@ -14,17 +16,23 @@ const HealthData = () => {
     const { data, error } = await supabase
       .from('health_data')
       .select('*');
-    if (error) console.error('Error fetching data:', error);
-    else setHealthData(data);
+    if (error) {
+      console.error('Error fetching data:', error);
+    } else {
+      setHealthData(data);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('health_data')
       .insert([{ date, weight, height, temperature }]);
-    if (error) console.error('Error inserting data:', error);
-    else fetchData();
+    if (error) {
+      console.error('Error inserting data:', error);
+    } else {
+      fetchData();
+    }
   };
 
   useEffect(() => {
@@ -32,7 +40,8 @@ const HealthData = () => {
   }, []);
 
   return (
-    <div>
+    <div className="page">
+      <Link to="/" className="home-button">ホーム</Link>
       <h1>健康データ</h1>
       <form onSubmit={handleSubmit}>
         <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
